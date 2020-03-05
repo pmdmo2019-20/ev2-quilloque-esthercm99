@@ -47,6 +47,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun navigateToDial() = navController.navigate(R.id.dialFragment)
-    private fun navigateToRecent() = navController.navigate(R.id.dialFragment)
-    private fun navigateToContacts() = navController.navigate(R.id.dialFragment)
+    private fun navigateToRecent() = navController.navigate(R.id.recentFragment)
+    private fun navigateToContacts() = navController.navigate(R.id.contactsFragment)
 }
