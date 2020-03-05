@@ -36,6 +36,17 @@ class DialFragment : Fragment() {
     }
 
     private fun setupKeyboard() {
+
+        viewmodel.currentNumber.observe(this) {
+            if(it.isNullOrEmpty()) {
+                imgVideo.visibility = View.INVISIBLE
+                imgBackspace.visibility = View.INVISIBLE
+            } else {
+                imgVideo.visibility = View.VISIBLE
+                imgBackspace.visibility = View.VISIBLE
+            }
+        }
+
         lblOne.setOnClickListener { writeNumber(lblOne.text.toString()) }
         lblTwo.setOnClickListener { writeNumber(lblTwo.text.toString()) }
         lblThree.setOnClickListener { writeNumber(lblThree.text.toString()) }
