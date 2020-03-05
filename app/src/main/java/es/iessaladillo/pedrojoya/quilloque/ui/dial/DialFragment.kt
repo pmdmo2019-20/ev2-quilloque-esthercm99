@@ -1,14 +1,17 @@
 package es.iessaladillo.pedrojoya.quilloque.ui.dial
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import es.iessaladillo.pedrojoya.quilloque.R
 import es.iessaladillo.pedrojoya.quilloque.data.CALL_TYPE_MADE
@@ -25,6 +28,9 @@ class DialFragment : Fragment() {
     }
     private val viewmodel: DialFragmentViewmodel by viewModels {
         DialFragmentViewmodelFactory(DatabaseContact.getInstance(this.requireContext()).recentsDao, requireActivity().application)
+    }
+    private val settings: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(activity)
     }
 
     private lateinit var dialAdapter: DialFragmentAdapter
@@ -73,7 +79,14 @@ class DialFragment : Fragment() {
         imgVideo.setOnClickListener { call(CALL_TYPE_VIDEO) }
     }
 
-    private fun navigateToCreateContact() = navController.navigate(R.id.addContactFragment)
+    private fun navigateToCreateContact() {
+        viewmodel.currentNumber.observe(this) {
+            settings.edit {
+                putString("currentNumber", it)
+            }
+        }
+        navController.navigate(R.id.addContactFragment)
+    }
 
     private fun writeNumber(number: String) {
         viewmodel.setCurrentNumber(number)
@@ -110,7 +123,6 @@ class DialFragment : Fragment() {
         viewmodel.suggestionsContacts.observe(this) {
             showCalls(it)
         }
-        // Listener
     }
     private fun showCalls(callsList: List<RecentCall>) {
         lstSuggestions.post {

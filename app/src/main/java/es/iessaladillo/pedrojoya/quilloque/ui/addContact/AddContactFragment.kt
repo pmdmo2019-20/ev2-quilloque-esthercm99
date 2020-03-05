@@ -1,14 +1,17 @@
 package es.iessaladillo.pedrojoya.quilloque.ui.addContact
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.preference.PreferenceManager
 import es.iessaladillo.pedrojoya.quilloque.R
 import es.iessaladillo.pedrojoya.quilloque.data.DatabaseContact
 import es.iessaladillo.pedrojoya.quilloque.data.entity.Contact
@@ -22,6 +25,9 @@ class AddContactFragment : Fragment() {
     }
     private val viewmodel: AddContactFragmentViewmodel by viewModels {
         AddContactFragmentViewmodelFactory(DatabaseContact.getInstance(this.requireContext()).contactsDao, requireActivity().application)
+    }
+    private val settings: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(activity)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -44,6 +50,7 @@ class AddContactFragment : Fragment() {
 
     private fun setupViews() {
         addContact()
+        txtPhoneNumber.setText(settings.getString("currentNumber", ""))
     }
     private fun addContact() {
         fabSave.setOnClickListener {
@@ -51,6 +58,9 @@ class AddContactFragment : Fragment() {
                 Toast.makeText(context, "Name or number phone is empty, try again", Toast.LENGTH_SHORT).show()
             } else {
                 viewmodel.createContact(Contact(0, txtName.text.toString(), txtPhoneNumber.text.toString()))
+                settings.edit {
+                    putString("currentNumber", "")
+                }
                 navController.navigateUp()
             }
         }

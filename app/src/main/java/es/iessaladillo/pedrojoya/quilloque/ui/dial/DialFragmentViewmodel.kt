@@ -18,7 +18,7 @@ class DialFragmentViewmodel (private val recentsDao: RecentsDao, private val app
     var suggestionsContacts: LiveData<List<RecentCall>> = recentsDao.querySugerenceContacts("")
 
     fun submitSuggestionsCall() {
-        suggestionsContacts  = recentsDao.querySugerenceContacts(currentNumber.value.toString())
+        suggestionsContacts  = recentsDao.querySugerenceContacts("%" + currentNumber.value.toString() + "%")
     }
 
     fun callNumber(type: String) {

@@ -40,7 +40,7 @@ class DialFragmentAdapter () : RecyclerView.Adapter<DialFragmentAdapter.ViewHold
                     imgAvatar.setImageDrawable(createAvatarDrawable("?"))
                 } else {
                     lblContactName.text = contactName
-                    imgAvatar.setImageDrawable(createAvatarDrawable(lblName.text.toString()))
+                    imgAvatar.setImageDrawable(createAvatarDrawable(lblContactName.text.toString()))
                 }
 
                 lblPhoneNumber.text = phoneNumber
