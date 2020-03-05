@@ -16,8 +16,13 @@ import androidx.preference.PreferenceManager
 import es.iessaladillo.pedrojoya.quilloque.R
 import es.iessaladillo.pedrojoya.quilloque.base.OnToolbarAvailableListener
 import es.iessaladillo.pedrojoya.quilloque.data.DatabaseContact
+import es.iessaladillo.pedrojoya.quilloque.data.entity.Call
 import kotlinx.android.synthetic.main.dial_fragment.*
 import kotlinx.android.synthetic.main.main_activity.*
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class DialFragment : Fragment() {
 
@@ -66,6 +71,8 @@ class DialFragment : Fragment() {
         lblPound.setOnClickListener { writeNumber(lblPound.text.toString()) }
 
         imgBackspace.setOnClickListener { eraseNumber() }
+
+        fabCall.setOnClickListener { call("made") }
     }
 
     private fun navigateToCreateContact() = navController.navigate(R.id.addContactFragment)
@@ -76,19 +83,23 @@ class DialFragment : Fragment() {
             lblNumber.text = it
         }
     }
-
     private fun eraseNumber() {
         viewmodel.eraseAnNumberOfCurrentNumber()
         viewmodel.currentNumber.observe(this) {
             lblNumber.text = it
         }
     }
-
     private fun setupToolbar() {
         (requireActivity() as AppCompatActivity).run {
             title = getString(R.string.dial_title)
             setSupportActionBar(toolbar)
         }
+    }
+
+    private fun call(type: String) = viewmodel.callNumber(type)
+
+    private fun showRecentContacts() {
+
     }
 
 }

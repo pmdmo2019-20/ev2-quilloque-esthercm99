@@ -1,11 +1,15 @@
 package es.iessaladillo.pedrojoya.quilloque.ui.dial
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import es.iessaladillo.pedrojoya.quilloque.data.RecentsDao
+import es.iessaladillo.pedrojoya.quilloque.data.entity.Call
 import es.iessaladillo.pedrojoya.quilloque.data.pojo.RecentCall
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.concurrent.thread
 
 class DialFragmentViewmodel (private val recentsDao: RecentsDao, private val application: Application) : ViewModel() {
@@ -17,6 +21,25 @@ class DialFragmentViewmodel (private val recentsDao: RecentsDao, private val app
         thread {
             recentContacts = recentsDao.querySugerenceContacts("%$currentNumber%")
         }
+    }
+
+    fun callNumber(type: String) {
+
+        if(!currentNumber.value.isNullOrEmpty()) {
+            val currentDate = SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(Date())
+            val splitCurrent =  currentDate.split("-")
+            val date = splitCurrent[0]
+            val time = splitCurrent[1]
+
+            val call = Call(0, currentNumber.value!!, type, date, time)
+
+            thread {
+                recentsDao.insertCall(call)
+            }
+
+            Toast.makeText(application.applicationContext, String.format("Call made on %s %s", date, time), Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     fun setCurrentNumber(number: String) {
