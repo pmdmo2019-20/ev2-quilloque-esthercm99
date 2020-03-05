@@ -37,7 +37,6 @@ class DialFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         setupAdapter()
         setupRecyclerView()
-        submitRecentCalls()
         setupKeyboard()
     }
 
@@ -81,12 +80,14 @@ class DialFragment : Fragment() {
         viewmodel.currentNumber.observe(this) {
             lblNumber.text = it
         }
+        submitRecentCalls()
     }
     private fun eraseNumber() {
         viewmodel.eraseAnNumberOfCurrentNumber()
         viewmodel.currentNumber.observe(this) {
             lblNumber.text = it
         }
+        submitRecentCalls()
     }
 
     private fun call(type: String) = viewmodel.callNumber(type)
@@ -114,8 +115,8 @@ class DialFragment : Fragment() {
     private fun showCalls(callsList: List<RecentCall>) {
         lstSuggestions.post {
             dialAdapter.submitList(callsList)
-            // lstSuggestions.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
-            // lblCreateContact.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+            lstSuggestions.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+            lblCreateContact.visibility = if (callsList.isEmpty()) View.VISIBLE else View.INVISIBLE
         }
     }
 

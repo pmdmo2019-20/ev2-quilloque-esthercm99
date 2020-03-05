@@ -1,8 +1,10 @@
 package es.iessaladillo.pedrojoya.quilloque.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Query
 import es.iessaladillo.pedrojoya.quilloque.data.entity.Contact
 
 @Dao
@@ -12,4 +14,7 @@ interface ContactsDao {
 
     @Delete
     fun deleteContact(contact: Contact)
+
+    @Query("SELECT * FROM Contact")
+    fun queryAllContacts() : LiveData<List<Contact>>
 }

@@ -1,31 +1,45 @@
 package es.iessaladillo.pedrojoya.quilloque.ui.contacts
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import es.iessaladillo.pedrojoya.quilloque.R
 import kotlinx.android.synthetic.main.contacts_fragment.*
 import kotlinx.android.synthetic.main.main_activity.*
-import android.view.Menu
-import android.view.MenuInflater
-
-
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
+import androidx.recyclerview.widget.GridLayoutManager
+import es.iessaladillo.pedrojoya.quilloque.base.OnToolbarAvailableListener
+import es.iessaladillo.pedrojoya.quilloque.data.DatabaseContact
+import es.iessaladillo.pedrojoya.quilloque.data.entity.Contact
 
 
 class ContactsFragment : Fragment() {
 
+    private lateinit var contactsAdapter: ContactsFragmentAdapter
+
     private val navController: NavController by lazy {
         NavHostFragment.findNavController(navHostFragment)
+    }
+    private val viewmodel: ContactsFragmentViewmodel by viewModels {
+        ContactsFragmentViewmodelFactory(DatabaseContact.getInstance(this.requireContext()).contactsDao, requireActivity().application)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+    }
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.add_menu, menu)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.mnuAdd -> navigateToCreateContact()
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -35,6 +49,9 @@ class ContactsFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupViews()
+        setupAdapter()
+        setupRecyclerView()
+        submitContacts()
     }
 
     private fun setupViews() {
@@ -43,8 +60,30 @@ class ContactsFragment : Fragment() {
 
     private fun navigateToCreateContact() = navController.navigate(R.id.addContactFragment)
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.add_menu, menu)
+    private fun setupAdapter() {
+        contactsAdapter = ContactsFragmentAdapter().also {
+            it.onItemClickListener = { position ->  }
+        }
+    }
+    private fun setupRecyclerView() {
+        lstContacts.run {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(activity, 1)
+            adapter = contactsAdapter
+        }
+    }
+
+    private fun submitContacts() {
+        viewmodel.submitContacts()
+        viewmodel.contactsList.observe(this) {
+            showCalls(it)
+        }
+    }
+    private fun showCalls(callsList: List<Contact>) {
+        lstContacts.post {
+            contactsAdapter.submitList(callsList)
+            lstContacts.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+            emptyView.visibility = if (callsList.isEmpty()) View.VISIBLE else View.INVISIBLE
+        }
     }
 }
