@@ -11,6 +11,8 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import es.iessaladillo.pedrojoya.quilloque.R
+import es.iessaladillo.pedrojoya.quilloque.data.CALL_TYPE_MADE
+import es.iessaladillo.pedrojoya.quilloque.data.CALL_TYPE_VIDEO
 import es.iessaladillo.pedrojoya.quilloque.data.DatabaseContact
 import es.iessaladillo.pedrojoya.quilloque.data.pojo.RecentCall
 import kotlinx.android.synthetic.main.dial_fragment.*
@@ -35,6 +37,7 @@ class DialFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         setupAdapter()
         setupRecyclerView()
+        submitRecentCalls()
         setupKeyboard()
     }
 
@@ -67,7 +70,8 @@ class DialFragment : Fragment() {
 
         imgBackspace.setOnClickListener { eraseNumber() }
 
-        fabCall.setOnClickListener { call("made") }
+        fabCall.setOnClickListener { call(CALL_TYPE_MADE) }
+        imgVideo.setOnClickListener { call(CALL_TYPE_VIDEO) }
     }
 
     private fun navigateToCreateContact() = navController.navigate(R.id.addContactFragment)
@@ -76,15 +80,12 @@ class DialFragment : Fragment() {
         viewmodel.setCurrentNumber(number)
         viewmodel.currentNumber.observe(this) {
             lblNumber.text = it
-            submitRecentCalls()
         }
-
     }
     private fun eraseNumber() {
         viewmodel.eraseAnNumberOfCurrentNumber()
         viewmodel.currentNumber.observe(this) {
             lblNumber.text = it
-            submitRecentCalls()
         }
     }
 
@@ -105,15 +106,16 @@ class DialFragment : Fragment() {
 
     private fun submitRecentCalls() {
         viewmodel.submitSuggestionsCall()
-        viewmodel.suggestionsContacts?.observe(this) {
+        viewmodel.suggestionsContacts.observe(this) {
             showCalls(it)
         }
+        // Listener
     }
     private fun showCalls(callsList: List<RecentCall>) {
         lstSuggestions.post {
             dialAdapter.submitList(callsList)
-            lstSuggestions.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
-            lblCreateContact.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+            // lstSuggestions.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+            // lblCreateContact.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
         }
     }
 

@@ -1,13 +1,10 @@
 package es.iessaladillo.pedrojoya.quilloque.ui.recent
 
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.DrawableUtils
 import androidx.recyclerview.widget.RecyclerView
 import es.iessaladillo.pedrojoya.quilloque.R
-import es.iessaladillo.pedrojoya.quilloque.data.CALL_TYPE_MISSED
 import es.iessaladillo.pedrojoya.quilloque.data.getCallTypeIcon
 import es.iessaladillo.pedrojoya.quilloque.data.pojo.ContactCall
 import es.iessaladillo.pedrojoya.quilloque.utils.createAvatarDrawable

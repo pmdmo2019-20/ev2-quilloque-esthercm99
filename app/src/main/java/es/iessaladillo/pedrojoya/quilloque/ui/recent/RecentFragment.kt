@@ -28,17 +28,9 @@ class RecentFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //setupToolbar()
         setupAdapter()
         setupRecyclerView()
         submitRecentCalls()
-    }
-
-    private fun setupToolbar() {
-        (requireActivity() as AppCompatActivity).run {
-            title = getString(R.string.recent_title)
-            setSupportActionBar(toolbar)
-        }
     }
 
     private fun setupAdapter() {

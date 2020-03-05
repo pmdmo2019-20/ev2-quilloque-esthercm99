@@ -14,15 +14,11 @@ import kotlin.concurrent.thread
 
 class DialFragmentViewmodel (private val recentsDao: RecentsDao, private val application: Application) : ViewModel() {
 
-
-
     var currentNumber: MutableLiveData<String> = MutableLiveData("")
-    var suggestionsContacts: LiveData<List<RecentCall>>? = null
+    var suggestionsContacts: LiveData<List<RecentCall>> = recentsDao.querySugerenceContacts("")
 
     fun submitSuggestionsCall() {
-        thread {
-            suggestionsContacts = recentsDao.querySugerenceContacts(currentNumber.value.toString())
-        }
+        suggestionsContacts  = recentsDao.querySugerenceContacts(currentNumber.value.toString())
     }
 
     fun callNumber(type: String) {
