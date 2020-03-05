@@ -44,6 +44,34 @@ class DialFragment : Fragment() {
         setupAdapter()
         setupRecyclerView()
         setupKeyboard()
+        submitRecentCalls()
+    }
+
+    private fun setupAdapter() {
+        dialAdapter = DialFragmentAdapter().also {
+            it.onItemClickListener = { position -> clickContact(position) }
+        }
+    }
+    private fun setupRecyclerView() {
+        lstSuggestions.run {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(activity, 1)
+            adapter = dialAdapter
+        }
+    }
+
+    private fun submitRecentCalls() {
+        viewmodel.submitSuggestionsCall()
+        viewmodel.suggestionsContacts.observe(this) {
+            showCalls(it)
+        }
+    }
+    private fun showCalls(callsList: List<RecentCall>) {
+        lstSuggestions.post {
+            dialAdapter.submitList(callsList)
+            lstSuggestions.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+            lblCreateContact.visibility = if (callsList.isEmpty()) View.VISIBLE else View.INVISIBLE
+        }
     }
 
     private fun setupKeyboard() {
@@ -79,15 +107,6 @@ class DialFragment : Fragment() {
         imgVideo.setOnClickListener { call(CALL_TYPE_VIDEO) }
     }
 
-    private fun navigateToCreateContact() {
-        viewmodel.currentNumber.observe(this) {
-            settings.edit {
-                putString("currentNumber", it)
-            }
-        }
-        navController.navigate(R.id.addContactFragment)
-    }
-
     private fun writeNumber(number: String) {
         viewmodel.setCurrentNumber(number)
         viewmodel.currentNumber.observe(this) {
@@ -105,31 +124,16 @@ class DialFragment : Fragment() {
 
     private fun call(type: String) = viewmodel.callNumber(type)
 
-    private fun setupAdapter() {
-        dialAdapter = DialFragmentAdapter().also {
-            it.onItemClickListener = { position -> call("call") }
-        }
-    }
-    private fun setupRecyclerView() {
-        lstSuggestions.run {
-            setHasFixedSize(true)
-            layoutManager = GridLayoutManager(activity, 1)
-            adapter = dialAdapter
-        }
-    }
 
-    private fun submitRecentCalls() {
-        viewmodel.submitSuggestionsCall()
-        viewmodel.suggestionsContacts.observe(this) {
-            showCalls(it)
+    private fun clickContact(position: Int) {}
+
+    private fun navigateToCreateContact() {
+        viewmodel.currentNumber.observe(this) {
+            settings.edit {
+                putString("currentNumber", it)
+            }
         }
-    }
-    private fun showCalls(callsList: List<RecentCall>) {
-        lstSuggestions.post {
-            dialAdapter.submitList(callsList)
-            lstSuggestions.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
-            lblCreateContact.visibility = if (callsList.isEmpty()) View.VISIBLE else View.INVISIBLE
-        }
+        navController.navigate(R.id.addContactFragment)
     }
 
 }

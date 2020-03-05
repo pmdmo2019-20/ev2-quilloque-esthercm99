@@ -11,7 +11,6 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.dial_fragment_item.*
 import kotlinx.android.synthetic.main.dial_fragment_item.imgAvatar
 import kotlinx.android.synthetic.main.dial_fragment_item.lblPhoneNumber
-import kotlinx.android.synthetic.main.recent_fragment_item.*
 
 class DialFragmentAdapter () : RecyclerView.Adapter<DialFragmentAdapter.ViewHolder>() {
     var dataList: List<RecentCall> = mutableListOf()

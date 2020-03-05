@@ -1,7 +1,10 @@
 package es.iessaladillo.pedrojoya.quilloque.ui.contacts
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -85,5 +88,17 @@ class ContactsFragment : Fragment() {
             lstContacts.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
             emptyView.visibility = if (callsList.isEmpty()) View.VISIBLE else View.INVISIBLE
         }
+    }
+    private fun changeView(editText: EditText, default: String) {
+        txtSearch.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+            }
+            override fun afterTextChanged(s: Editable) {
+
+            }
+        })
     }
 }

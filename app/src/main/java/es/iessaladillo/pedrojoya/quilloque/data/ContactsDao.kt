@@ -17,4 +17,7 @@ interface ContactsDao {
 
     @Query("SELECT * FROM Contact")
     fun queryAllContacts() : LiveData<List<Contact>>
+
+    @Query("SELECT * FROM Contact WHERE name LIKE :name")
+    fun queryContacts(name: String) : LiveData<List<Contact>>
 }
