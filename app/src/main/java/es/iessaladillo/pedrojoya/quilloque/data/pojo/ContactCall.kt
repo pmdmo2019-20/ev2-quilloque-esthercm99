@@ -6,6 +6,6 @@ data class ContactCall (
     var type: String,
     var date: String,
     var time: String,
-    var contactId: Long,
-    var contactName: String
+    var contactId: Long?,
+    var contactName: String?
 )

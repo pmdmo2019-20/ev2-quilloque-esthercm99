@@ -1,28 +1,20 @@
 package es.iessaladillo.pedrojoya.quilloque.ui.dial
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.GridLayoutManager
 import es.iessaladillo.pedrojoya.quilloque.R
-import es.iessaladillo.pedrojoya.quilloque.base.OnToolbarAvailableListener
 import es.iessaladillo.pedrojoya.quilloque.data.DatabaseContact
-import es.iessaladillo.pedrojoya.quilloque.data.entity.Call
+import es.iessaladillo.pedrojoya.quilloque.data.pojo.RecentCall
 import kotlinx.android.synthetic.main.dial_fragment.*
 import kotlinx.android.synthetic.main.main_activity.*
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class DialFragment : Fragment() {
 
@@ -33,13 +25,16 @@ class DialFragment : Fragment() {
         DialFragmentViewmodelFactory(DatabaseContact.getInstance(this.requireContext()).recentsDao, requireActivity().application)
     }
 
+    private lateinit var dialAdapter: DialFragmentAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.dial_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setupToolbar()
+        setupAdapter()
+        setupRecyclerView()
         setupKeyboard()
     }
 
@@ -81,25 +76,45 @@ class DialFragment : Fragment() {
         viewmodel.setCurrentNumber(number)
         viewmodel.currentNumber.observe(this) {
             lblNumber.text = it
+            submitRecentCalls()
         }
+
     }
     private fun eraseNumber() {
         viewmodel.eraseAnNumberOfCurrentNumber()
         viewmodel.currentNumber.observe(this) {
             lblNumber.text = it
-        }
-    }
-    private fun setupToolbar() {
-        (requireActivity() as AppCompatActivity).run {
-            title = getString(R.string.dial_title)
-            setSupportActionBar(toolbar)
+            submitRecentCalls()
         }
     }
 
     private fun call(type: String) = viewmodel.callNumber(type)
 
-    private fun showRecentContacts() {
+    private fun setupAdapter() {
+        dialAdapter = DialFragmentAdapter().also {
+            it.onItemClickListener = { position -> call("call") }
+        }
+    }
+    private fun setupRecyclerView() {
+        lstSuggestions.run {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(activity, 1)
+            adapter = dialAdapter
+        }
+    }
 
+    private fun submitRecentCalls() {
+        viewmodel.submitSuggestionsCall()
+        viewmodel.suggestionsContacts?.observe(this) {
+            showCalls(it)
+        }
+    }
+    private fun showCalls(callsList: List<RecentCall>) {
+        lstSuggestions.post {
+            dialAdapter.submitList(callsList)
+            lstSuggestions.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+            lblCreateContact.visibility = if (callsList.isNotEmpty()) View.VISIBLE else View.INVISIBLE
+        }
     }
 
 }

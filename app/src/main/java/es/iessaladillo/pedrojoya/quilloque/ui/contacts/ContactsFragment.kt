@@ -34,20 +34,11 @@ class ContactsFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setupToolbar()
         setupViews()
     }
 
     private fun setupViews() {
         emptyView.setOnClickListener { navigateToCreateContact() }
-    }
-
-    private fun setupToolbar() {
-        (requireActivity() as AppCompatActivity).run {
-            title = getString(R.string.contacts_title)
-            setSupportActionBar(toolbar)
-        }
-
     }
 
     private fun navigateToCreateContact() = navController.navigate(R.id.addContactFragment)

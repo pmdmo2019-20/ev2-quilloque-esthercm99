@@ -14,19 +14,21 @@ import kotlin.concurrent.thread
 
 class DialFragmentViewmodel (private val recentsDao: RecentsDao, private val application: Application) : ViewModel() {
 
-    var currentNumber: MutableLiveData<String> = MutableLiveData("")
-    private var recentContacts: LiveData<List<RecentCall>>? = null
 
-    fun getRecentCall() {
+
+    var currentNumber: MutableLiveData<String> = MutableLiveData("")
+    var suggestionsContacts: LiveData<List<RecentCall>>? = null
+
+    fun submitSuggestionsCall() {
         thread {
-            recentContacts = recentsDao.querySugerenceContacts("%$currentNumber%")
+            suggestionsContacts = recentsDao.querySugerenceContacts(currentNumber.value.toString())
         }
     }
 
     fun callNumber(type: String) {
 
         if(!currentNumber.value.isNullOrEmpty()) {
-            val currentDate = SimpleDateFormat("yyyy/MM/dd-HH:mm:ss").format(Date())
+            val currentDate = SimpleDateFormat("dd/MM/yyyy-HH:mm").format(Date())
             val splitCurrent =  currentDate.split("-")
             val date = splitCurrent[0]
             val time = splitCurrent[1]

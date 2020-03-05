@@ -50,8 +50,26 @@ class MainActivity : AppCompatActivity() {
             R.id.mnuContacts -> navigateToContacts()
         }
     }
-    private fun navigateToDial() = navController.navigate(R.id.dialFragment)
-    private fun navigateToRecent() = navController.navigate(R.id.recentFragment)
-    private fun navigateToContacts() = navController.navigate(R.id.contactsFragment)
+
+    private fun setupToolbar(titleAct: String) {
+        this.run {
+            title = titleAct
+            setSupportActionBar(toolbar)
+        }
+    }
+    private fun navigateToDial() {
+        setupToolbar(getString(R.string.dial_title))
+        navController.navigate(R.id.dialFragment)
+    }
+    private fun navigateToRecent() {
+        setupToolbar(getString(R.string.recent_title))
+        navController.navigate(R.id.recentFragment)
+    }
+    private fun navigateToContacts() {
+        setupToolbar(getString(R.string.contacts_title))
+        navController.navigate(R.id.contactsFragment)
+    }
+
+
 
 }
