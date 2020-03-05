@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
@@ -13,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.preference.PreferenceManager
 import es.iessaladillo.pedrojoya.quilloque.R
+import es.iessaladillo.pedrojoya.quilloque.base.OnToolbarAvailableListener
 import es.iessaladillo.pedrojoya.quilloque.data.DatabaseContact
 import kotlinx.android.synthetic.main.dial_fragment.*
 import kotlinx.android.synthetic.main.main_activity.*
@@ -32,10 +34,13 @@ class DialFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setupToolbar()
         setupKeyboard()
     }
 
     private fun setupKeyboard() {
+
+        lblCreateContact.setOnClickListener { navigateToCreateContact() }
 
         viewmodel.currentNumber.observe(this) {
             if(it.isNullOrEmpty()) {
@@ -62,6 +67,9 @@ class DialFragment : Fragment() {
 
         imgBackspace.setOnClickListener { eraseNumber() }
     }
+
+    private fun navigateToCreateContact() = navController.navigate(R.id.addContactFragment)
+
     private fun writeNumber(number: String) {
         viewmodel.setCurrentNumber(number)
         viewmodel.currentNumber.observe(this) {
@@ -73,6 +81,13 @@ class DialFragment : Fragment() {
         viewmodel.eraseAnNumberOfCurrentNumber()
         viewmodel.currentNumber.observe(this) {
             lblNumber.text = it
+        }
+    }
+
+    private fun setupToolbar() {
+        (requireActivity() as AppCompatActivity).run {
+            title = getString(R.string.dial_title)
+            setSupportActionBar(toolbar)
         }
     }
 

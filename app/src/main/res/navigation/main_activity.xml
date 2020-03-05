@@ -18,4 +18,8 @@
         android:id="@+id/recentFragment"
         android:name="es.iessaladillo.pedrojoya.quilloque.ui.recent.RecentFragment"
         android:label="RecentFragment" />
+    <fragment
+        android:id="@+id/addContactFragment"
+        android:name="es.iessaladillo.pedrojoya.quilloque.ui.addContact.AddContactFragment"
+        android:label="AddContactFragment" />
 </navigation>

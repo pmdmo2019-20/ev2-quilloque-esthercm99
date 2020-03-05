@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "Call"
 )
-data class CallRecent (
+data class Call (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long,
@@ -19,9 +19,5 @@ data class CallRecent (
     @ColumnInfo(name = "date")
     var date: String,
     @ColumnInfo(name = "time")
-    var time: String,
-    @ColumnInfo(name = "contactId")
-    var contactId: Long,
-    @ColumnInfo(name = "name")
-    var name: String
+    var time: String
 )

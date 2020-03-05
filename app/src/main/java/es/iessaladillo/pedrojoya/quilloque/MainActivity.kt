@@ -4,15 +4,19 @@ import android.os.Bundle
 import android.text.TextUtils.replace
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.commit
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupWithNavController
+import es.iessaladillo.pedrojoya.quilloque.base.OnToolbarAvailableListener
 import kotlinx.android.synthetic.main.main_activity.*
 
 class MainActivity : AppCompatActivity() {
+
     private val navController: NavController by lazy {
         findNavController(R.id.navHostFragment)
     }
@@ -49,4 +53,5 @@ class MainActivity : AppCompatActivity() {
     private fun navigateToDial() = navController.navigate(R.id.dialFragment)
     private fun navigateToRecent() = navController.navigate(R.id.recentFragment)
     private fun navigateToContacts() = navController.navigate(R.id.contactsFragment)
+
 }

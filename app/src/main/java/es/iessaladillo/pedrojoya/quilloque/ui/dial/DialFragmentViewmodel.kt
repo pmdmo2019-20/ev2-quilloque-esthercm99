@@ -5,19 +5,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import es.iessaladillo.pedrojoya.quilloque.data.RecentsDao
-import es.iessaladillo.pedrojoya.quilloque.data.pojo.RecentContact
+import es.iessaladillo.pedrojoya.quilloque.data.pojo.RecentCall
+import kotlin.concurrent.thread
 
-class DialFragmentViewmodel (private val application: Application) : ViewModel() {
+class DialFragmentViewmodel (private val recentsDao: RecentsDao, private val application: Application) : ViewModel() {
 
     var currentNumber: MutableLiveData<String> = MutableLiveData("")
-    //private var recentContacts: LiveData<List<RecentContact>>? = null
-/*
+    private var recentContacts: LiveData<List<RecentCall>>? = null
+
     fun getRecentCall() {
         thread {
-            recentContacts = recentsDao.queryRecentCalls("%$currentNumber%")
+            recentContacts = recentsDao.querySugerenceContacts("%$currentNumber%")
         }
     }
-*/
+
     fun setCurrentNumber(number: String) {
         currentNumber.value = currentNumber.value + number
     }
