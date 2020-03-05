@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import es.iessaladillo.pedrojoya.quilloque.data.entity.CallRecent
 import es.iessaladillo.pedrojoya.quilloque.data.entity.Contact
 
 @Database(
-    entities = [Contact::class],
+    entities = [Contact::class, CallRecent::class],
     version = 1,
     exportSchema = true
 )
